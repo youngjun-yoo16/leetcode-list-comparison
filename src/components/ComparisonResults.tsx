@@ -1,40 +1,44 @@
-import React, { useState, useMemo } from 'react';
-import { ComparisonResult, ComparisonStats } from '../types';
-import { getTopic, topicOrder, Topic } from '../utils/topicMapping';
+import React, { useState, useMemo } from "react";
+import { ComparisonResult, ComparisonStats } from "../types";
+import { getTopic, topicOrder, Topic } from "../utils/topicMapping";
 
 interface ComparisonResultsProps {
   results: ComparisonResult[];
   stats: ComparisonStats;
 }
 
-type SortType = 'none' | 'difficulty' | 'topic';
+type SortType = "none" | "difficulty" | "topic";
 
 const getDifficultyClass = (question: string): string => {
   const lowerQuestion = question.toLowerCase();
-  if (lowerQuestion.includes('(easy)')) {
-    return 'difficulty-easy';
-  } else if (lowerQuestion.includes('(med.)') || lowerQuestion.includes('(medium)')) {
-    return 'difficulty-medium';
-  } else if (lowerQuestion.includes('(hard)')) {
-    return 'difficulty-hard';
+  if (lowerQuestion.includes("(easy)")) {
+    return "difficulty-easy";
+  } else if (
+    lowerQuestion.includes("(med.)") ||
+    lowerQuestion.includes("(medium)")
+  ) {
+    return "difficulty-medium";
+  } else if (lowerQuestion.includes("(hard)")) {
+    return "difficulty-hard";
   }
-  return '';
+  return "";
 };
 
 const getDifficultyValue = (question: string): number => {
   const lowerQuestion = question.toLowerCase();
-  if (lowerQuestion.includes('(easy)')) return 1;
-  if (lowerQuestion.includes('(med.)') || lowerQuestion.includes('(medium)')) return 2;
-  if (lowerQuestion.includes('(hard)')) return 3;
+  if (lowerQuestion.includes("(easy)")) return 1;
+  if (lowerQuestion.includes("(med.)") || lowerQuestion.includes("(medium)"))
+    return 2;
+  if (lowerQuestion.includes("(hard)")) return 3;
   return 0;
 };
 
 const sortQuestions = (questions: string[], sortType: SortType): string[] => {
-  if (sortType === 'none') {
+  if (sortType === "none") {
     return [...questions];
   }
-  
-  if (sortType === 'difficulty') {
+
+  if (sortType === "difficulty") {
     return [...questions].sort((a, b) => {
       const diffA = getDifficultyValue(a);
       const diffB = getDifficultyValue(b);
@@ -44,8 +48,8 @@ const sortQuestions = (questions: string[], sortType: SortType): string[] => {
       return a.localeCompare(b);
     });
   }
-  
-  if (sortType === 'topic') {
+
+  if (sortType === "topic") {
     return [...questions].sort((a, b) => {
       const topicA = getTopic(a);
       const topicB = getTopic(b);
@@ -57,7 +61,7 @@ const sortQuestions = (questions: string[], sortType: SortType): string[] => {
       return a.localeCompare(b);
     });
   }
-  
+
   return questions;
 };
 
@@ -70,7 +74,7 @@ const groupByTopic = (questions: string[]): Map<Topic, string[]> => {
     }
     grouped.get(topic)!.push(question);
   });
-  
+
   // Sort each topic group by difficulty, then alphabetically
   grouped.forEach((topicQuestions) => {
     topicQuestions.sort((a, b) => {
@@ -82,31 +86,39 @@ const groupByTopic = (questions: string[]): Map<Topic, string[]> => {
       return a.localeCompare(b);
     });
   });
-  
+
   return grouped;
 };
 
-const getDifficultyBreakdown = (questions: string[]): { easy: number; medium: number; hard: number } => {
+const getDifficultyBreakdown = (
+  questions: string[]
+): { easy: number; medium: number; hard: number } => {
   let easy = 0;
   let medium = 0;
   let hard = 0;
-  
+
   questions.forEach((question) => {
     const lowerQuestion = question.toLowerCase();
-    if (lowerQuestion.includes('(easy)')) {
+    if (lowerQuestion.includes("(easy)")) {
       easy++;
-    } else if (lowerQuestion.includes('(med.)') || lowerQuestion.includes('(medium)')) {
+    } else if (
+      lowerQuestion.includes("(med.)") ||
+      lowerQuestion.includes("(medium)")
+    ) {
       medium++;
-    } else if (lowerQuestion.includes('(hard)')) {
+    } else if (lowerQuestion.includes("(hard)")) {
       hard++;
     }
   });
-  
+
   return { easy, medium, hard };
 };
 
-export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, stats }) => {
-  const [sortType, setSortType] = useState<SortType>('none');
+export const ComparisonResults: React.FC<ComparisonResultsProps> = ({
+  results,
+  stats,
+}) => {
+  const [sortType, setSortType] = useState<SortType>("none");
 
   if (results.length === 0) {
     return (
@@ -120,7 +132,8 @@ export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, s
     return results.map((result) => ({
       ...result,
       sortedQuestions: sortQuestions(result.uniqueQuestions, sortType),
-      groupedByTopic: sortType === 'topic' ? groupByTopic(result.uniqueQuestions) : null,
+      groupedByTopic:
+        sortType === "topic" ? groupByTopic(result.uniqueQuestions) : null,
       difficultyBreakdown: getDifficultyBreakdown(result.uniqueQuestions),
     }));
   }, [results, sortType]);
@@ -130,7 +143,9 @@ export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, s
   }, [stats.sharedQuestionsList, sortType]);
 
   const sharedGroupedByTopic = useMemo(() => {
-    return sortType === 'topic' ? groupByTopic(stats.sharedQuestionsList) : null;
+    return sortType === "topic"
+      ? groupByTopic(stats.sharedQuestionsList)
+      : null;
   }, [stats.sharedQuestionsList, sortType]);
 
   const sharedDifficultyBreakdown = useMemo(() => {
@@ -174,35 +189,44 @@ export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, s
           <div className="unique-questions">
             <p>
               <strong>
-                {stats.sharedQuestions} shared question(s): {sharedDifficultyBreakdown.easy} Easy, {sharedDifficultyBreakdown.medium} Med, {sharedDifficultyBreakdown.hard} Hard
+                {stats.sharedQuestions} shared question(s):{" "}
+                {sharedDifficultyBreakdown.easy} Easy,{" "}
+                {sharedDifficultyBreakdown.medium} Med,{" "}
+                {sharedDifficultyBreakdown.hard} Hard
               </strong>
             </p>
-            {sortType === 'topic' && sharedGroupedByTopic ? (
-              // Grouped by topic display
-              Array.from(sharedGroupedByTopic.entries())
-                .sort(([topicA], [topicB]) => {
-                  const indexA = topicOrder.indexOf(topicA);
-                  const indexB = topicOrder.indexOf(topicB);
-                  return indexA - indexB;
-                })
-                .map(([topic, questions]) => (
-                  <div key={topic} className="topic-group">
-                    <div className="topic-header">{topic}</div>
-                    {questions.map((question, index) => (
-                      <div key={index} className={`question-item ${getDifficultyClass(question)}`}>
-                        {question}
-                      </div>
-                    ))}
+            {sortType === "topic" && sharedGroupedByTopic
+              ? // Grouped by topic display
+                Array.from(sharedGroupedByTopic.entries())
+                  .sort(([topicA], [topicB]) => {
+                    const indexA = topicOrder.indexOf(topicA);
+                    const indexB = topicOrder.indexOf(topicB);
+                    return indexA - indexB;
+                  })
+                  .map(([topic, questions]) => (
+                    <div key={topic} className="topic-group">
+                      <div className="topic-header">{topic}</div>
+                      {questions.map((question, index) => (
+                        <div
+                          key={index}
+                          className={`question-item ${getDifficultyClass(
+                            question
+                          )}`}
+                        >
+                          {question}
+                        </div>
+                      ))}
+                    </div>
+                  ))
+              : // Regular list display
+                sortedSharedQuestions.map((question, index) => (
+                  <div
+                    key={index}
+                    className={`question-item ${getDifficultyClass(question)}`}
+                  >
+                    {question}
                   </div>
-                ))
-            ) : (
-              // Regular list display
-              sortedSharedQuestions.map((question, index) => (
-                <div key={index} className={`question-item ${getDifficultyClass(question)}`}>
-                  {question}
-                </div>
-              ))
-            )}
+                ))}
           </div>
         </div>
       )}
@@ -216,42 +240,60 @@ export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, s
                 <>
                   <p>
                     <strong>
-                      {result.uniqueCount} unique question(s): {result.difficultyBreakdown.easy} Easy, {result.difficultyBreakdown.medium} Med, {result.difficultyBreakdown.hard} Hard
+                      {result.uniqueCount} unique question(s):{" "}
+                      {result.difficultyBreakdown.easy} Easy,{" "}
+                      {result.difficultyBreakdown.medium} Med,{" "}
+                      {result.difficultyBreakdown.hard} Hard
                     </strong>
                   </p>
-                  {sortType === 'topic' && result.groupedByTopic ? (
-                    // Grouped by topic display
-                    Array.from(result.groupedByTopic.entries())
-                      .sort(([topicA], [topicB]) => {
-                        const indexA = topicOrder.indexOf(topicA);
-                        const indexB = topicOrder.indexOf(topicB);
-                        return indexA - indexB;
-                      })
-                      .map(([topic, questions]) => (
-                        <div key={topic} className="topic-group">
-                          <div className="topic-header">{topic}</div>
-                          {questions.map((question, index) => (
-                            <div key={index} className={`question-item ${getDifficultyClass(question)}`}>
-                              {question}
-                            </div>
-                          ))}
+                  {sortType === "topic" && result.groupedByTopic
+                    ? // Grouped by topic display
+                      Array.from(result.groupedByTopic.entries())
+                        .sort(([topicA], [topicB]) => {
+                          const indexA = topicOrder.indexOf(topicA);
+                          const indexB = topicOrder.indexOf(topicB);
+                          return indexA - indexB;
+                        })
+                        .map(([topic, questions]) => (
+                          <div key={topic} className="topic-group">
+                            <div className="topic-header">{topic}</div>
+                            {questions.map((question, index) => (
+                              <div
+                                key={index}
+                                className={`question-item ${getDifficultyClass(
+                                  question
+                                )}`}
+                              >
+                                {question}
+                              </div>
+                            ))}
+                          </div>
+                        ))
+                    : // Regular list display
+                      result.sortedQuestions.map((question, index) => (
+                        <div
+                          key={index}
+                          className={`question-item ${getDifficultyClass(
+                            question
+                          )}`}
+                        >
+                          {question}
                         </div>
-                      ))
-                  ) : (
-                    // Regular list display
-                    result.sortedQuestions.map((question, index) => (
-                      <div key={index} className={`question-item ${getDifficultyClass(question)}`}>
-                        {question}
-                      </div>
-                    ))
-                  )}
+                      ))}
                 </>
               ) : (
                 <div className="no-unique">
-                  No unique questions. All questions in this list appear in at least one other list.
+                  No unique questions. All questions in this list appear in at
+                  least one other list.
                 </div>
               )}
-              <p style={{ marginTop: '15px', color: '#6c757d', fontSize: '0.9em' }}>
+              <p
+                style={{
+                  marginTop: "15px",
+                  color: "#6c757d",
+                  fontSize: "0.9em",
+                }}
+              >
                 Total questions in list: {result.totalQuestions}
               </p>
             </div>

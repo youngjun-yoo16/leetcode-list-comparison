@@ -1,13 +1,17 @@
-import React from 'react';
-import { LeetCodeList } from '../types';
+import React from "react";
+import { LeetCodeList } from "../types";
 
 interface ListItemProps {
   list: LeetCodeList;
-  onUpdate: (id: string, field: 'name' | 'questions', value: string) => void;
+  onUpdate: (id: string, field: "name" | "questions", value: string) => void;
   onRemove: (id: string) => void;
 }
 
-export const ListItem: React.FC<ListItemProps> = ({ list, onUpdate, onRemove }) => {
+export const ListItem: React.FC<ListItemProps> = ({
+  list,
+  onUpdate,
+  onRemove,
+}) => {
   return (
     <div className="list-item">
       <div className="list-header">
@@ -16,12 +20,9 @@ export const ListItem: React.FC<ListItemProps> = ({ list, onUpdate, onRemove }) 
           className="list-name-input"
           value={list.name}
           placeholder="List name (e.g., NeetCode 150)"
-          onChange={(e) => onUpdate(list.id, 'name', e.target.value)}
+          onChange={(e) => onUpdate(list.id, "name", e.target.value)}
         />
-        <button
-          className="remove-list-btn"
-          onClick={() => onRemove(list.id)}
-        >
+        <button className="remove-list-btn" onClick={() => onRemove(list.id)}>
           Remove
         </button>
       </div>
