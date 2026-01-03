@@ -4,11 +4,13 @@ import { parseQuestions, generateListId } from './utils';
 import { ListItem } from './components/ListItem';
 import { ComparisonResults } from './components/ComparisonResults';
 import { neetcode150Questions } from './data/neetcode150';
+import { grind169Questions } from './data/grind169';
 import './styles.css';
 
 function App() {
   const [lists, setLists] = useState<LeetCodeList[]>(() => [
     { id: generateListId(), name: 'NeetCode 150', questions: neetcode150Questions },
+    { id: generateListId(), name: 'Grind 169', questions: grind169Questions },
   ]);
   const [comparisonResults, setComparisonResults] = useState<ComparisonResult[]>([]);
   const [stats, setStats] = useState<ComparisonStats | null>(null);
