@@ -146,11 +146,7 @@ const topicKeywords: Record<Topic, string[]> = {
     'number of connected components',
     'redundant connection',
     'accounts merge',
-    'network delay time',
     'cheapest flights',
-    'reconstruct itinerary',
-    'min cost to connect',
-    'swim in rising water',
     'alien dictionary',
     'walls and gates',
     'shortest path to get food',
@@ -160,6 +156,10 @@ const topicKeywords: Record<Topic, string[]> = {
   'Advanced Graphs': [
     'longest increasing path',
     'maximum profit in job scheduling',
+    'network delay time',
+    'reconstruct itinerary',
+    'min cost to connect',
+    'swim in rising water',
   ],
   '1-D Dynamic Programming': [
     'climbing stairs',
@@ -174,15 +174,7 @@ const topicKeywords: Record<Topic, string[]> = {
     'word break',
     'longest increasing subsequence',
     'partition equal subset sum',
-    'target sum',
-    'interleaving string',
-    'distinct subsequences',
-    'edit distance',
     'best time to buy and sell stock',
-    'best time to buy and sell stock with cooldown',
-    'longest common subsequence',
-    'burst balloons',
-    'regular expression matching',
   ],
   '2-D Dynamic Programming': [
     'unique paths',
@@ -192,6 +184,10 @@ const topicKeywords: Record<Topic, string[]> = {
     'distinct subsequences',
     'regular expression matching',
     'maximal square',
+    'best time to buy and sell stock with cooldown',
+    'target sum',
+    'coin change ii',
+    'burst balloons',
   ],
   'Greedy': [
     'maximum subarray',
@@ -203,8 +199,8 @@ const topicKeywords: Record<Topic, string[]> = {
     'non-overlapping intervals',
     'partition labels',
     'hand of straights',
-    'minimum interval to include each query',
     'merge triplets to form target triplet',
+    'valid parenthesis string',
   ],
   'Intervals': [
     'merge intervals',
@@ -241,15 +237,24 @@ const topicKeywords: Record<Topic, string[]> = {
 export function getTopic(question: string): Topic {
   const lowerQuestion = question.toLowerCase();
   
+  // Collect all matches with their keyword lengths
+  const matches: Array<{ topic: Topic; keywordLength: number }> = [];
+  
   // Check each topic's keywords
   for (const [topic, keywords] of Object.entries(topicKeywords)) {
     if (topic === 'Other') continue;
     
     for (const keyword of keywords) {
       if (lowerQuestion.includes(keyword)) {
-        return topic as Topic;
+        matches.push({ topic: topic as Topic, keywordLength: keyword.length });
       }
     }
+  }
+  
+  // Return the topic with the longest matching keyword (most specific match)
+  if (matches.length > 0) {
+    matches.sort((a, b) => b.keywordLength - a.keywordLength);
+    return matches[0].topic;
   }
   
   return 'Other';
