@@ -46,6 +46,19 @@ function App() {
       list.questions.forEach((q) => allQuestions.add(q));
     });
 
+    // Calculate shared questions (questions that appear in ALL lists)
+    const sharedQuestions = new Set<string>();
+    if (parsedLists.length > 0) {
+      // Start with questions from the first list
+      parsedLists[0].questions.forEach((question) => {
+        // Check if this question exists in all other lists
+        const existsInAllLists = parsedLists.every((list) => list.questions.has(question));
+        if (existsInAllLists) {
+          sharedQuestions.add(question);
+        }
+      });
+    }
+
     const results: ComparisonResult[] = parsedLists.map((list) => {
       const uniqueQuestions = new Set<string>();
 
@@ -71,6 +84,7 @@ function App() {
       totalLists: parsedLists.length,
       totalUniqueQuestions: allQuestions.size,
       totalQuestionsAcrossLists: parsedLists.reduce((sum, list) => sum + list.questions.size, 0),
+      sharedQuestions: sharedQuestions.size,
     };
 
     setComparisonResults(results);

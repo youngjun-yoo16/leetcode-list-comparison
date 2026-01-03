@@ -15,6 +15,7 @@ export interface ComparisonStats {
   totalLists: number;
   totalUniqueQuestions: number;
   totalQuestionsAcrossLists: number;
+  sharedQuestions: number;
 }
 
 export interface ParsedList {
