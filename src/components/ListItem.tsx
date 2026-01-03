@@ -29,7 +29,7 @@ export const ListItem: React.FC<ListItemProps> = ({ list, onUpdate, onRemove }) 
         className="questions-textarea"
         placeholder="Enter question names or IDs, one per line (e.g., Two Sum, Best Time to Buy and Sell Stock, ...)"
         value={list.questions}
-        onChange={(e) => onUpdate(list.id, 'questions', e.target.value)}
+        readOnly
       />
     </div>
   );

@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { ComparisonResult, ComparisonStats } from '../types';
+import { getTopic, topicOrder, Topic } from '../utils/topicMapping';
 
 interface ComparisonResultsProps {
   results: ComparisonResult[];
   stats: ComparisonStats;
 }
+
+type SortType = 'none' | 'difficulty' | 'topic';
 
 const getDifficultyClass = (question: string): string => {
   const lowerQuestion = question.toLowerCase();
@@ -18,7 +21,74 @@ const getDifficultyClass = (question: string): string => {
   return '';
 };
 
+const getDifficultyValue = (question: string): number => {
+  const lowerQuestion = question.toLowerCase();
+  if (lowerQuestion.includes('(easy)')) return 1;
+  if (lowerQuestion.includes('(med.)') || lowerQuestion.includes('(medium)')) return 2;
+  if (lowerQuestion.includes('(hard)')) return 3;
+  return 0;
+};
+
+const sortQuestions = (questions: string[], sortType: SortType): string[] => {
+  if (sortType === 'none') {
+    return [...questions];
+  }
+  
+  if (sortType === 'difficulty') {
+    return [...questions].sort((a, b) => {
+      const diffA = getDifficultyValue(a);
+      const diffB = getDifficultyValue(b);
+      if (diffA !== diffB) {
+        return diffA - diffB;
+      }
+      return a.localeCompare(b);
+    });
+  }
+  
+  if (sortType === 'topic') {
+    return [...questions].sort((a, b) => {
+      const topicA = getTopic(a);
+      const topicB = getTopic(b);
+      const indexA = topicOrder.indexOf(topicA);
+      const indexB = topicOrder.indexOf(topicB);
+      if (indexA !== indexB) {
+        return indexA - indexB;
+      }
+      return a.localeCompare(b);
+    });
+  }
+  
+  return questions;
+};
+
+const groupByTopic = (questions: string[]): Map<Topic, string[]> => {
+  const grouped = new Map<Topic, string[]>();
+  questions.forEach((question) => {
+    const topic = getTopic(question);
+    if (!grouped.has(topic)) {
+      grouped.set(topic, []);
+    }
+    grouped.get(topic)!.push(question);
+  });
+  
+  // Sort each topic group by difficulty, then alphabetically
+  grouped.forEach((topicQuestions) => {
+    topicQuestions.sort((a, b) => {
+      const diffA = getDifficultyValue(a);
+      const diffB = getDifficultyValue(b);
+      if (diffA !== diffB) {
+        return diffA - diffB;
+      }
+      return a.localeCompare(b);
+    });
+  });
+  
+  return grouped;
+};
+
 export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, stats }) => {
+  const [sortType, setSortType] = useState<SortType>('none');
+
   if (results.length === 0) {
     return (
       <p className="placeholder">
@@ -26,6 +96,14 @@ export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, s
       </p>
     );
   }
+
+  const sortedResults = useMemo(() => {
+    return results.map((result) => ({
+      ...result,
+      sortedQuestions: sortQuestions(result.uniqueQuestions, sortType),
+      groupedByTopic: sortType === 'topic' ? groupByTopic(result.uniqueQuestions) : null,
+    }));
+  }, [results, sortType]);
 
   return (
     <>
@@ -44,8 +122,22 @@ export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, s
         </div>
       </div>
 
+      <div className="sort-controls">
+        <label htmlFor="sort-select">Sort by: </label>
+        <select
+          id="sort-select"
+          className="sort-select"
+          value={sortType}
+          onChange={(e) => setSortType(e.target.value as SortType)}
+        >
+          <option value="none">None</option>
+          <option value="difficulty">Difficulty</option>
+          <option value="topic">Topic</option>
+        </select>
+      </div>
+
       <div className="results-grid">
-        {results.map((result) => (
+        {sortedResults.map((result) => (
           <div key={result.name} className="result-group">
             <h3>{result.name}</h3>
             <div className="unique-questions">
@@ -54,11 +146,32 @@ export const ComparisonResults: React.FC<ComparisonResultsProps> = ({ results, s
                   <p>
                     <strong>{result.uniqueCount} unique question(s):</strong>
                   </p>
-                  {result.uniqueQuestions.map((question, index) => (
-                    <div key={index} className={`question-item ${getDifficultyClass(question)}`}>
-                      {question}
-                    </div>
-                  ))}
+                  {sortType === 'topic' && result.groupedByTopic ? (
+                    // Grouped by topic display
+                    Array.from(result.groupedByTopic.entries())
+                      .sort(([topicA], [topicB]) => {
+                        const indexA = topicOrder.indexOf(topicA);
+                        const indexB = topicOrder.indexOf(topicB);
+                        return indexA - indexB;
+                      })
+                      .map(([topic, questions]) => (
+                        <div key={topic} className="topic-group">
+                          <div className="topic-header">{topic}</div>
+                          {questions.map((question, index) => (
+                            <div key={index} className={`question-item ${getDifficultyClass(question)}`}>
+                              {question}
+                            </div>
+                          ))}
+                        </div>
+                      ))
+                  ) : (
+                    // Regular list display
+                    result.sortedQuestions.map((question, index) => (
+                      <div key={index} className={`question-item ${getDifficultyClass(question)}`}>
+                        {question}
+                      </div>
+                    ))
+                  )}
                 </>
               ) : (
                 <div className="no-unique">

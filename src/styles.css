@@ -118,11 +118,13 @@ section h2 {
     font-family: 'Courier New', monospace;
     font-size: 0.9em;
     resize: vertical;
+    cursor: default;
+    background-color: #f8f9fa;
 }
 
 .questions-textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #dee2e6;
 }
 
 .questions-textarea::placeholder {
@@ -266,4 +268,56 @@ section h2 {
     color: #6c757d;
     font-size: 0.9em;
     margin-top: 5px;
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    border: 2px solid #e9ecef;
+}
+
+.sort-controls label {
+    font-weight: 600;
+    color: #667eea;
+}
+
+.sort-select {
+    padding: 8px 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1em;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.topic-group {
+    margin-bottom: 20px;
+}
+
+.topic-header {
+    font-weight: 600;
+    font-size: 1.1em;
+    color: #667eea;
+    padding: 8px 12px;
+    background: #f0f4ff;
+    border-left: 4px solid #667eea;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.topic-group:first-child .topic-header {
+    margin-top: 0;
 }
