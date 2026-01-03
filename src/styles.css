@@ -88,11 +88,13 @@ section h2 {
   border: 2px solid #dee2e6;
   border-radius: 6px;
   margin-right: 10px;
+  cursor: default;
+  background-color: #f8f9fa;
 }
 
 .list-name-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #dee2e6;
 }
 
 .remove-list-btn {

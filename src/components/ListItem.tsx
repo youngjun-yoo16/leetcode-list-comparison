@@ -9,7 +9,7 @@ interface ListItemProps {
 
 export const ListItem: React.FC<ListItemProps> = ({
   list,
-  onUpdate,
+  onUpdate: _onUpdate,
   onRemove,
 }) => {
   return (
@@ -20,7 +20,7 @@ export const ListItem: React.FC<ListItemProps> = ({
           className="list-name-input"
           value={list.name}
           placeholder="List name (e.g., NeetCode 150)"
-          onChange={(e) => onUpdate(list.id, "name", e.target.value)}
+          readOnly
         />
         <button className="remove-list-btn" onClick={() => onRemove(list.id)}>
           Remove
