@@ -15,15 +15,6 @@ function App() {
   const [comparisonResults, setComparisonResults] = useState<ComparisonResult[]>([]);
   const [stats, setStats] = useState<ComparisonStats | null>(null);
 
-  const addList = useCallback(() => {
-    const newList: LeetCodeList = {
-      id: generateListId(),
-      name: `List ${lists.length + 1}`,
-      questions: '',
-    };
-    setLists((prev: LeetCodeList[]) => [...prev, newList]);
-  }, [lists.length]);
-
   const removeList = useCallback((id: string) => {
     setLists((prev: LeetCodeList[]) => prev.filter((list: LeetCodeList) => list.id !== id));
   }, []);
@@ -85,6 +76,7 @@ function App() {
       totalUniqueQuestions: allQuestions.size,
       totalQuestionsAcrossLists: parsedLists.reduce((sum, list) => sum + list.questions.size, 0),
       sharedQuestions: sharedQuestions.size,
+      sharedQuestionsList: Array.from(sharedQuestions).sort(),
     };
 
     setComparisonResults(results);
@@ -111,9 +103,6 @@ function App() {
               />
             ))}
           </div>
-          <button className="btn btn-primary" onClick={addList}>
-            + Add List
-          </button>
         </section>
 
         <section className="comparison-section">
