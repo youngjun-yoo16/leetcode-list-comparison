@@ -26,12 +26,6 @@ function App() {
   >([]);
   const [stats, setStats] = useState<ComparisonStats | null>(null);
 
-  const removeList = useCallback((id: string) => {
-    setLists((prev: LeetCodeList[]) =>
-      prev.filter((list: LeetCodeList) => list.id !== id)
-    );
-  }, []);
-
   const updateList = useCallback(
     (id: string, field: "name" | "questions", value: string) => {
       setLists((prev: LeetCodeList[]) =>
@@ -126,7 +120,6 @@ function App() {
                 key={list.id}
                 list={list}
                 onUpdate={updateList}
-                onRemove={removeList}
               />
             ))}
           </div>
