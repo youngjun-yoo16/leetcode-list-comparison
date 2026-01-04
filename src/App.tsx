@@ -141,6 +141,28 @@ function App() {
           </button>
         </section>
       </main>
+      <footer className="app-footer">
+        <p>
+          <a
+            href="https://github.com/youngjun-yoo16/leetcode-list-comparison"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link"
+          >
+            GitHub
+          </a>
+          {' • '}
+          Made with <span className="heart">❤️</span> by{' '}
+          <a
+            href="https://github.com/youngjun-yoo16"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link"
+          >
+            Youngjun Yoo
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }
