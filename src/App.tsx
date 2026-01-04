@@ -132,7 +132,7 @@ function App() {
               <ComparisonResults results={comparisonResults} stats={stats} />
             ) : (
               <p className="placeholder">
-                Add lists and click "Compare" to see results
+                Click "Compare Lists" to see results
               </p>
             )}
           </div>
