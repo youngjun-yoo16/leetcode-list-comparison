@@ -2,83 +2,152 @@
 
 A web-based tool to compare questions across different LeetCode lists (like NeetCode 150, Grind 169, etc.) and identify which questions are unique to each list.
 
+**🌐 Live Demo:** [https://youngjun-yoo16.github.io/leetcode-list-comparison/](https://youngjun-yoo16.github.io/leetcode-list-comparison/)
+
 Built with React, TypeScript, and Vite.
 
 ## Features
 
-- Add multiple LeetCode lists
-- Compare lists to find unique questions
-- View statistics about the lists
-- Clean, modern UI
-- Type-safe with TypeScript
+- **Pre-loaded Lists**: NeetCode 150 and Grind 169 lists are included by default
+- **Unique Questions Detection**: Automatically identifies questions unique to each list
+- **Shared Questions Display**: Shows questions that appear in all lists
+- **Sorting Options**:
+  - Sort by difficulty (Easy → Medium → Hard)
+  - Sort by topic (18 categories including Arrays & Hashing, Two Pointers, Dynamic Programming, etc.)
+  - Topic sorting includes difficulty ordering within each category
+- **Difficulty Color Coding**: 
+  - 🟢 Green for Easy questions
+  - 🟡 Yellow for Medium questions
+  - 🔴 Red for Hard questions
+- **Statistics Dashboard**: 
+  - Total number of lists
+  - Total distinct questions across all lists
+  - Number of shared questions
+  - Difficulty breakdown for unique questions
+- **Side-by-Side Comparison**: View results in a responsive grid layout
+- **Modern UI**: Clean, intuitive interface with smooth interactions
 
 ## Getting Started
 
-1. Install dependencies:
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/youngjun-yoo16/leetcode-list-comparison.git
+cd leetcode-list-comparison
+```
+
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Start the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
-3. Open your browser to the URL shown in the terminal (typically `http://localhost:5173`)
+4. Open your browser to the URL shown in the terminal (typically `http://localhost:5173`)
 
 ## Usage
 
-1. Click "+ Add List" to add a new list
-2. Enter a list name (e.g., "NeetCode 150")
-3. Enter question names or IDs, one per line in the textarea
-4. Add more lists as needed
-5. Click "Compare Lists" to see which questions are unique to each list
+1. The app comes pre-loaded with **NeetCode 150** and **Grind 169** lists
+2. Click **"Compare Lists"** to see the comparison results
+3. Use the **"Sort by"** dropdown to organize questions:
+   - **None**: Original order
+   - **Difficulty**: Sorted by Easy → Medium → Hard
+   - **Topic**: Grouped by topic categories with difficulty sorting within each topic
+4. View the statistics at the top:
+   - Total distinct questions across all lists
+   - Number of shared questions
+   - Difficulty breakdown for each list's unique questions
 
-## Example
+## Example Output
 
-List 1: NeetCode 150
-- Two Sum
-- Best Time to Buy and Sell Stock
-- Contains Duplicate
+When comparing NeetCode 150 and Grind 169:
 
-List 2: Grind 169
-- Two Sum
-- Valid Anagram
-- Group Anagrams
-
-After comparison:
-- NeetCode 150 unique: "Best Time to Buy and Sell Stock", "Contains Duplicate"
-- Grind 169 unique: "Valid Anagram", "Group Anagrams"
+- **Shared Questions**: Questions that appear in both lists (e.g., "Two Sum", "Valid Parentheses")
+- **NeetCode 150 Unique**: Questions only in NeetCode 150 (e.g., "Coin Change II", "Count Good Nodes in Binary Tree")
+- **Grind 169 Unique**: Questions only in Grind 169 (e.g., "Roman to Integer", "Longest Common Prefix")
 
 ## Project Structure
 
 ```
 src/
   components/
-    ListItem.tsx          - Individual list item component
-    ComparisonResults.tsx - Results display component
-  types.ts                - TypeScript type definitions
-  utils.ts                - Utility functions
-  App.tsx                  - Main application component
-  main.tsx                 - Application entry point
-  styles.css               - Global styles
+    ListItem.tsx              - Individual list item component (read-only)
+    ComparisonResults.tsx     - Results display with sorting and grouping
+  data/
+    neetcode150.ts            - NeetCode 150 questions data
+    grind169.ts               - Grind 169 questions data
+  utils/
+    topicMapping.ts           - Topic categorization and mapping logic
+  types.ts                    - TypeScript type definitions
+  utils.ts                    - Utility functions (parsing, ID generation)
+  App.tsx                     - Main application component
+  main.tsx                    - Application entry point
+  styles.css                  - Global styles
 ```
 
-## Build
+## Build & Deployment
 
-To build for production:
+### Build for Production
+
 ```bash
 npm run build
 ```
 
-To preview the production build:
+The build output will be in the `dist/` directory.
+
+### Preview Production Build
+
 ```bash
 npm run preview
 ```
 
-## Future Enhancements
+### Deployment
 
-- Import/export lists as JSON
-- Save lists to localStorage
-- Support for question IDs in addition to names
-- More detailed comparison statistics
+The project is configured for GitHub Pages deployment via GitHub Actions. The workflow automatically builds and deploys on push to the main branch.
+
+## Technologies Used
+
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **CSS3** - Styling with modern features
+
+## Topic Categories
+
+The tool categorizes questions into 18 topics:
+
+1. Arrays & Hashing
+2. Two Pointers
+3. Sliding Window
+4. Stack
+5. Binary Search
+6. Linked List
+7. Trees
+8. Heap / Priority Queue
+9. Backtracking
+10. Tries
+11. Graphs
+12. Advanced Graphs
+13. 1-D Dynamic Programming
+14. 2-D Dynamic Programming
+15. Greedy
+16. Intervals
+17. Math & Geometry
+18. Bit Manipulation
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available under the MIT License.
